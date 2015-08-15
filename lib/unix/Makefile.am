@@ -71,6 +71,7 @@ cx3dinclude_HEADERS = \
 	../../include/cybergarage/x3d/Geometry2DNode.h \
 	../../include/cybergarage/x3d/Geometry3DNode.h \
 	../../include/cybergarage/x3d/GeometryNode.h \
+	../../include/cybergarage/x3d/GeometryRenderInfo.h \
 	../../include/cybergarage/x3d/Graphic3D.h \
 	../../include/cybergarage/x3d/GroupNode.h \
 	../../include/cybergarage/x3d/Grouping2DNode.h \

@@ -13,6 +13,7 @@
 
 #include <cybergarage/x3d/VRML97Fields.h>
 #include <cybergarage/x3d/Node.h>
+#include <cybergarage/x3d/GeometryRenderInfo.h>
 
 namespace CyberX3D {
 
@@ -20,7 +21,7 @@ namespace CyberX3D {
 const char displayListPrivateFieldString[] = "oglDisplayList";
 #endif
 
-class GeometryNode : public Node 
+class GeometryNode : public Node, public GeometryRenderInfo
 {
 
 #ifdef CX3D_SUPPORT_OPENGL
@@ -42,7 +43,6 @@ public:
 	void setDisplayList(unsigned int n);
 	unsigned int getDisplayList() const;
 	virtual void draw() const;
-
 #endif
 };
 

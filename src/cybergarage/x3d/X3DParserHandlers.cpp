@@ -208,21 +208,33 @@ const Attributes& attributes)
 	if (node->isXMLNode() == true)
 		node->setName(elemName);
 
-    unsigned int len = attributes.getLength();
-    for (unsigned int index = 0; index < len; index++)
-    {
-		std::string attrName = XMLCh2Char(attributes.getQName(index));
-		const XMLCh *attrValue = attributes.getValue(index);
-		if (node->isXMLNode() == true) {
-			XMLNode *xmlNode = (XMLNode *)node;
-			addXMLElement(xmlNode, attrName.c_str(), attrValue);
-		}
-		else 
-			addX3DElement(node, attrName.c_str(), attrValue);
-    }
+        unsigned int len = attributes.getLength();
+        for (unsigned int index = 0; index < len; index++)
+        {
+            std::string attrName = XMLCh2Char(attributes.getQName(index));
+            const XMLCh *attrValue = attributes.getValue(index);
+            if (node->isXMLNode() == true) {
+                XMLNode *xmlNode = (XMLNode *)node;
+                addXMLElement(xmlNode, attrName.c_str(), attrValue);
+            } else {
+                if (attrName.compare("DEF") == 0) {
+                    char *attrValueStr = XMLCh2Char(attrValue);
+                    node->setName(attrValueStr);
+                } else if (attrName.compare("USE") == 0) {
+                    char *attrValueStr = XMLCh2Char(attrValue);
+                    Node *referenceNode = GetParserObject()->findLastNode(attrValueStr);
+                    if (referenceNode) {
+                        delete node;
+                        node = referenceNode->createDEFNode();
+                    }
+                } else {
+                    addX3DElement(node, attrName.c_str(), attrValue);
+                }
+            }
+        }
 
-	ParserAddNode(node);
-	ParserPushNode(node);
+        ParserAddNode(node);
+        ParserPushNode(node);
 }
 
 void X3DParserHandlers::endElement(

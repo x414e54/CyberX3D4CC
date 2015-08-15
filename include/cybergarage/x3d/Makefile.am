@@ -61,6 +61,7 @@ libcx3d_HEADERS = \
 	Geometry2DNode.h \
 	Geometry3DNode.h \
 	GeometryNode.h \
+	GeometryRenderInfo.h \
 	Graphic3D.h \
 	GroupNode.h \
 	Grouping2DNode.h \

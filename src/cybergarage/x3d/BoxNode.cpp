@@ -129,6 +129,68 @@ void BoxNode::recomputeBoundingBox()
 }
 
 ////////////////////////////////////////////////
+//	BoxNode::getVertexArray
+////////////////////////////////////////////////
+
+void BoxNode::getVertexArray(VertexArray& array) 
+{
+	const size_t vertices = 6 * 4;
+	const size_t size_vec2 = sizeof(float) * 2;
+	const size_t size_vec3 = sizeof(float) * 3;
+	array = VertexArray(vertices, 0);
+	array.format.addAttribute("position", 0, 2 * size_vec3 + size_vec2,
+				  size_vec3, false, 0);
+	array.format.addAttribute("normal", size_vec3, 2 * size_vec3 + 
+				  size_vec2, size_vec3, false, 0);
+	array.format.addAttribute("texcoord", size_vec3 * 2, 2 * size_vec3 +
+				  size_vec2, size_vec2, false, 0);
+}
+
+////////////////////////////////////////////////
+//	BoxNode::getVertexData
+////////////////////////////////////////////////
+
+void BoxNode::getVertexData(void *vertex_data)
+{
+	VertexArray array;
+	getVertexArray(array);
+
+	static float n[6][3] = {
+			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0},
+			{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}};
+
+	static int faces[6][4] = {
+			{ 3, 2, 1, 0 }, { 7, 6, 2, 3 }, { 4, 5, 6, 7 },
+			{ 0, 1, 5, 4 }, { 1, 2, 6, 5 }, { 3, 0, 4, 7 }};
+
+	static float t[4][2] = {
+			{ 0.0f, 1.0f }, { 1.0f, 1.0f },
+			{ 1.0f, 0.0f }, { 0.0f, 0.0f } };
+
+	float v[8][3];
+
+	v[0][0] = v[3][0] = v[4][0] = v[7][0] = -getX()/2.0f;
+	v[1][0] = v[2][0] = v[5][0] = v[6][0] = getX()/2.0f;
+	v[2][1] = v[3][1] = v[6][1] = v[7][1] = -getY()/2.0f;
+	v[0][1] = v[1][1] = v[4][1] = v[5][1] = getY()/2.0f;
+	v[4][2] = v[5][2] = v[6][2] = v[7][2] = -getZ()/2.0f;
+	v[0][2] = v[1][2] = v[2][2] = v[3][2] = getZ()/2.0f;
+
+	
+	char* buffer = (char*)vertex_data;
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 4; j++) {
+                        for (int k = 0; k < array.format.num_attribs; ++k) {
+				const Attribute& attrib =
+                                        array.format.attribs[k];
+				memcpy(buffer + attrib.getIndexForVert(i*j),
+				       v[faces[i][j]], attrib.attrib_size);
+			}
+		}
+	}
+}
+
+////////////////////////////////////////////////
 //	DrawBox
 //
 //	   4+--------+5
@@ -189,14 +251,14 @@ static void DrawBox(float x0, float x1, float y0, float y1,	float z0, float z1)
 //	BoxNode::recomputeDisplayList
 ////////////////////////////////////////////////
 
-void BoxNode::recomputeDisplayList() {
+void BoxNode::recomputeDisplayList() {	
 	unsigned int nCurrentDisplayList = getDisplayList();
 	if (0 < nCurrentDisplayList)
 		glDeleteLists(nCurrentDisplayList, 1);
 
 	unsigned int nNewDisplayList = glGenLists(1);
 	glNewList(nNewDisplayList, GL_COMPILE);
-	    DrawBox(-getX()/2.0f, getX()/2.0f, -getY()/2.0f, getY()/2.0f, -getZ()/2.0f, getZ()/2.0f);
+		DrawBox(-getX()/2.0f, getX()/2.0f, -getY()/2.0f, getY()/2.0f, -getZ()/2.0f, getZ()/2.0f);
 	glEndList();
 
 	setDisplayList(nNewDisplayList);

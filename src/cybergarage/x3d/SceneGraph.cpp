@@ -393,6 +393,7 @@ void SceneGraph::initialize(void (*callbackFn)(int nNode, void *info), void *cal
 	}
 
 	// Convert from InstanceNode into DEFNode 
+#ifdef UNUSE_DEF_NODE
 	node = getNodes();
 	while(node != NULL) {
 		Node *nextNode = node->nextTraversal();
@@ -413,7 +414,8 @@ void SceneGraph::initialize(void (*callbackFn)(int nNode, void *info), void *cal
 			nextNode = defNode->nextTraversal();
 		}
 		node = nextNode;
-	}
+        }
+#endif
 
 	// Convert from DEFNode into InstanceNode 
 	node = getNodes();
