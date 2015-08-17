@@ -132,29 +132,34 @@ void BoxNode::recomputeBoundingBox()
 //	BoxNode::getVertexArray
 ////////////////////////////////////////////////
 
-void BoxNode::getVertexArray(VertexArray& array) 
+
+int BoxNode::getNumVertexArrays()
 {
+	return 1;
+}
+
+void BoxNode::getVertexArray(VertexArray& array, int id) 
+{
+	if (id != 0) return;
+
 	const size_t vertices = 6 * 4;
 	const size_t size_vec2 = sizeof(float) * 2;
 	const size_t size_vec3 = sizeof(float) * 3;
-	array = VertexArray(vertices, 0);
+	array = VertexArray(vertices, 0, false);
 	array.format.addAttribute("position", 0, 2 * size_vec3 + size_vec2,
-				  size_vec3, false, 0);
+				  size_vec3, false);
 	array.format.addAttribute("normal", size_vec3, 2 * size_vec3 + 
-				  size_vec2, size_vec3, false, 0);
+				  size_vec2, size_vec3, false);
 	array.format.addAttribute("texcoord", size_vec3 * 2, 2 * size_vec3 +
-				  size_vec2, size_vec2, false, 0);
+				  size_vec2, size_vec2, false);
 }
 
 ////////////////////////////////////////////////
 //	BoxNode::getVertexData
 ////////////////////////////////////////////////
 
-void BoxNode::getVertexData(void *vertex_data)
+void BoxNode::getVertexData(const VertexArray& array, void *vertex_data)
 {
-	VertexArray array;
-	getVertexArray(array);
-
 	static float n[6][3] = {
 			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0},
 			{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}};
