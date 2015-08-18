@@ -72,19 +72,19 @@ public:
 	//	getNumVertexArrays
 	////////////////////////////////////////////////
 
-	virtual int getNumVertexArrays();
+	virtual size_t getNumVertexArrays();
 
 	////////////////////////////////////////////////
 	//	getVertexArray
 	////////////////////////////////////////////////
 
-	virtual void getVertexArray(VertexArray& array, int id);
+	virtual void getVertexArray(VertexArray& array, size_t id);
 	
 	////////////////////////////////////////////////
 	//	getVertexData
 	////////////////////////////////////////////////
 
-	virtual void getVertexData(const VertexArray& array, void *vertex_data);
+	virtual void getVertexData(size_t id, void *vertex_data);
 
 	////////////////////////////////////////////////
 	//	recomputeDisplayList

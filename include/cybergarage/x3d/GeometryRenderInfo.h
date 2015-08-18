@@ -3,68 +3,127 @@
 
 #include <cstddef>
 #include <cstring>
+#include <typeinfo>
 
 namespace CyberX3D {
 
 class GeometryRenderInfo
 {
 public:	
-	class Attribute 
+	class Attribute
 	{
 	public:
-		const char* name;
-		size_t offset;
-		size_t stride;
-		size_t attrib_size;
-		bool normalized;
-
-		Attribute() : name(NULL), offset(0), stride(0),
-			      attrib_size(0), normalized(false) {}
-
-		Attribute(const char* name, size_t offset, size_t stride,
-			  size_t attrib_size, bool normalized) 
-			: name(name), offset(offset), stride(stride),
-			  attrib_size(attrib_size), normalized(normalized)
+		Attribute() : name(NULL), offset(0), components(0),
+			  normalized(false), type_size(0),
+			  type(&typeid(std::bad_typeid))
 			  {}
 
-		size_t getIndexForVert(size_t vertex) const
+		Attribute(const char* name, const std::type_info& type,
+			  size_t offset, size_t components, bool normalized,
+			  size_t type_size) 
+			: name(name), type(&type), offset(offset),
+			  components(components), normalized(normalized),
+			  type_size(type_size)
+			  {}
+
+		size_t getByteSize() const
 		{
-			return (vertex * stride) + offset;
+			return components * type_size;
 		}
 
-    		bool operator<(const Attribute& b) const {
+		const char* getName() const
+		{
+			return name;
+		}
+
+		const std::type_info& getType() const
+		{
+			return *type;
+		}
+
+		size_t getOffset() const
+		{
+			return offset;
+		}
+
+		size_t getComponents() const
+		{
+			return offset;
+		}
+
+		bool getNormalized() const
+		{
+			return normalized;
+		}
+
+    		bool operator<(const Attribute& b) const 
+		{
         		return strcmp(this->name, b.name) < 0 &&
+			       this->type->before(*b.type) &&
 			       this->normalized < b.normalized &&
 			       this->offset < b.offset &&
-			       this->stride < b.stride &&
-			       this->attrib_size < b.attrib_size;
+			       this->components < b.components;
     		}
 
-    		bool operator==(const Attribute& b) const {
+    		bool operator==(const Attribute& b) const 
+		{
         		return strcmp(this->name, b.name) == 0 &&
+			       this->type == b.type &&
 			       this->normalized == b.normalized &&
 			       this->offset == b.offset &&
-			       this->stride == b.stride &&
-			       this->attrib_size == b.attrib_size;
+			       this->components == b.components;
     		}
+
+		static size_t alignAttribute(const Attribute& attrib) 
+		{
+			size_t byte_size = attrib.getByteSize();
+			return byte_size + (byte_size % 4);
+		}
+ 
+	private:
+		const char* name;
+		const std::type_info* type;
+		size_t offset;
+		size_t components;
+		bool normalized;
+
+		size_t type_size;
 	};
 	
 	static const int MAX_ATTRIBUTES = 16;
 	class VertexFormat {
 	public:		
-		size_t num_attribs;
-		size_t size;
-		Attribute attribs[MAX_ATTRIBUTES]; 
 		VertexFormat() : num_attribs(0), size(0) {}
 
-		void addAttribute(const char* name, size_t offset,
-				  size_t stride, size_t attrib_size,
-				  bool normalized)
+		const Attribute* getAttribute(size_t id) const
+		{
+			if (id < num_attribs) {
+				return &attribs[id];
+			}
+			return NULL;
+		}
+
+		size_t getNumAttributes() const
+		{
+			return num_attribs;
+		}
+
+		size_t getSize() const
+		{
+			return size;
+		}
+
+		template<class T>
+		void addAttribute(const char* name, size_t components,
+				  bool normalized = false)
 		{
 			if (num_attribs < MAX_ATTRIBUTES - 1) {
-				size += attrib_size;
-				attribs[num_attribs++] = Attribute(name,
-					offset, stride, attrib_size, normalized);
+				attribs[num_attribs] = Attribute(name,
+					typeid(T), size, components,
+					normalized, T(sizeof(T)));
+				size += Attribute::alignAttribute(
+						attribs[num_attribs]);
+				++num_attribs;
 			}
 		}
 
@@ -74,7 +133,7 @@ public:
 				return false;
 			}
 
-			for (int i = 0; i < num_attribs; ++i) {
+			for (size_t i = 0; i < num_attribs; ++i) {
 				const Attribute& attrib_a = this->attribs[i];
 				const Attribute& attrib_b = b.attribs[i];
 				if (!(attrib_a < attrib_b)) {
@@ -91,7 +150,7 @@ public:
 				return false;
 			}
 
-			for (int i = 0; i < num_attribs; ++i) {
+			for (size_t i = 0; i < num_attribs; ++i) {
 				const Attribute& attrib_a = this->attribs[i];
 				const Attribute& attrib_b = b.attribs[i];
 				if (!(attrib_a == attrib_b)) {
@@ -101,36 +160,65 @@ public:
 
 			return true;
     		}
+	private:
+		size_t num_attribs;
+		size_t size;
+		Attribute attribs[MAX_ATTRIBUTES]; 
 	};
 
 	class VertexArray 
 	{
 	public:
+		VertexArray() : num_verts(0), num_elements(0),
+				instanced(false) {}
+
+		VertexArray(size_t num_verts, size_t num_elements,
+			    bool instanced, const VertexFormat& format) 
+			: num_verts(num_verts), num_elements(num_elements),
+			  instanced(instanced), format(format) {}
+
+		const VertexFormat& getFormat() const 
+		{
+			return format;
+		}
+
+		size_t getNumElement() const 
+		{
+			return num_elements;
+		}
+
+		size_t getNumVertecies() const 
+		{
+			return num_verts;
+		}
+
+		size_t getBufferSize() const 
+		{
+			return num_verts * format.getSize();
+		}
+
+	private:		
 		size_t num_verts;
 		size_t num_elements;
 		bool instanced;
 		VertexFormat format;
-		VertexArray() : num_verts(0), num_elements(0), instanced(false) {}
-
-		VertexArray(size_t num_verts, size_t num_elements,
-			    bool instanced) 
-			: num_verts(num_verts), num_elements(num_elements),
-			  instanced(instanced) {}
-
-		size_t getBufferSize() const 
-		{
-			return num_verts * format.size;
-		}
 	};
+
+	static size_t getIndexForVert(int vertex, const VertexArray& array,
+				      const Attribute& attrib) 
+	{
+		return (vertex * array.getFormat().getSize())
+			 + attrib.getOffset();
+	}
 
 	GeometryRenderInfo() {}
 	virtual ~GeometryRenderInfo() {}
 
-	virtual int getNumVertexArrays() { return 0; }
-	virtual void getVertexArray(VertexArray&, int) {}
+	virtual size_t getNumVertexArrays() { return 0; }
+	virtual void getVertexArray(VertexArray&, size_t) {}
 
-	virtual void getVertexData(const VertexArray&, void *) {}
-	virtual void getElementData(const VertexArray&, void *) {}
+	virtual void getVertexData(void *, size_t) {}
+	virtual void getElementData(void *, size_t) {}
 };
 
 }

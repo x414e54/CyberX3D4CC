@@ -133,33 +133,36 @@ void BoxNode::recomputeBoundingBox()
 ////////////////////////////////////////////////
 
 
-int BoxNode::getNumVertexArrays()
+size_t BoxNode::getNumVertexArrays()
 {
 	return 1;
 }
 
-void BoxNode::getVertexArray(VertexArray& array, int id) 
+void BoxNode::getVertexArray(VertexArray& array, size_t id) 
 {
 	if (id != 0) return;
 
-	const size_t vertices = 6 * 4;
-	const size_t size_vec2 = sizeof(float) * 2;
-	const size_t size_vec3 = sizeof(float) * 3;
-	array = VertexArray(vertices, 0, false);
-	array.format.addAttribute("position", 0, 2 * size_vec3 + size_vec2,
-				  size_vec3, false);
-	array.format.addAttribute("normal", size_vec3, 2 * size_vec3 + 
-				  size_vec2, size_vec3, false);
-	array.format.addAttribute("texcoord", size_vec3 * 2, 2 * size_vec3 +
-				  size_vec2, size_vec2, false);
+	VertexFormat format;
+	format.addAttribute<float>("position", 3);
+	format.addAttribute<float>("normal", 3);
+	format.addAttribute<float>("texcoord", 2);
+	array = VertexArray(6 * 4, 0, false, format);
 }
 
 ////////////////////////////////////////////////
 //	BoxNode::getVertexData
 ////////////////////////////////////////////////
 
-void BoxNode::getVertexData(const VertexArray& array, void *vertex_data)
+void BoxNode::getVertexData(size_t id, void *vertex_data)
 {
+	if (id >= getNumVertexArrays()) {
+		return;
+	}
+
+	VertexArray array;
+	getVertexArray(array, id);
+ 	const VertexFormat& format = array.getFormat();
+
 	static float n[6][3] = {
 			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0},
 			{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}};
@@ -183,15 +186,17 @@ void BoxNode::getVertexData(const VertexArray& array, void *vertex_data)
 
 	
 	char* buffer = (char*)vertex_data;
+
 	for (int i = 0; i < 6; i++) {
-		for (int j = 0; j < 4; j++) {
-                        for (int k = 0; k < array.format.num_attribs; ++k) {
-				const Attribute& attrib =
-                                        array.format.attribs[k];
-				memcpy(buffer + attrib.getIndexForVert(i*j),
-				       v[faces[i][j]], attrib.attrib_size);
-			}
+	for (int j = 0; j < 4; j++) {
+
+                for (int k = 0; k < format.getNumAttributes(); ++k) {
+			const Attribute* attrib = format.getAttribute(k);
+			memcpy(buffer + getIndexForVert(i*j, array, *attrib),
+			       v[faces[i][j]], attrib->getByteSize());
 		}
+
+	}
 	}
 }
 
