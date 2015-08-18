@@ -48,7 +48,7 @@ public:
 
 		size_t getComponents() const
 		{
-			return offset;
+			return components;
 		}
 
 		bool getNormalized() const
@@ -182,12 +182,12 @@ public:
 			return format;
 		}
 
-		size_t getNumElement() const 
+		size_t getNumElements() const 
 		{
 			return num_elements;
 		}
 
-		size_t getNumVertecies() const 
+		size_t getNumVertices() const 
 		{
 			return num_verts;
 		}
