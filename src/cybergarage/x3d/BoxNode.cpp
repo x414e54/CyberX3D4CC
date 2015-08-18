@@ -146,7 +146,7 @@ void BoxNode::getVertexArray(VertexArray& array, size_t id)
 	format.addAttribute<float>("position", 3);
 	format.addAttribute<float>("normal", 3);
 	format.addAttribute<float>("texcoord", 2);
-	array = VertexArray(6 * 4, 0, false, format);
+	array = VertexArray(36, 0, false, format);
 }
 
 ////////////////////////////////////////////////
@@ -167,13 +167,15 @@ void BoxNode::getVertexData(size_t id, void *vertex_data)
 			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0},
 			{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}};
 
-	static int faces[6][4] = {
-			{ 3, 2, 1, 0 }, { 7, 6, 2, 3 }, { 4, 5, 6, 7 },
-			{ 0, 1, 5, 4 }, { 1, 2, 6, 5 }, { 3, 0, 4, 7 }};
+	static int faces[6][6] = {
+			{ 3, 2, 1, 1, 0, 3 }, { 7, 6, 2, 2, 3, 7 },
+			{ 4, 5, 6, 6, 7, 4 }, { 0, 1, 5, 5, 4, 0 },
+			{ 1, 2, 6, 6, 5,1  }, { 3, 0, 4, 4, 7, 3 }};
 
-	static float t[4][2] = {
+	static float t[6][2] = {
 			{ 0.0f, 1.0f }, { 1.0f, 1.0f },
-			{ 1.0f, 0.0f }, { 0.0f, 0.0f } };
+			{ 1.0f, 0.0f }, { 1.0f, 0.0f },
+			{ 0.0f, 0.0f }, { 0.0f, 1.0f } };
 
 	float v[8][3];
 
@@ -187,16 +189,20 @@ void BoxNode::getVertexData(size_t id, void *vertex_data)
 	
 	char* buffer = (char*)vertex_data;
 
+	const Attribute& position = *format.getAttribute(0);
+	const Attribute& normal = *format.getAttribute(1);
+	const Attribute& tex_coord = *format.getAttribute(2);
+
 	for (int i = 0; i < 6; i++) {
-	for (int j = 0; j < 4; j++) {
-
-                for (int k = 0; k < format.getNumAttributes(); ++k) {
-			const Attribute* attrib = format.getAttribute(k);
-			memcpy(buffer + getIndexForVert(i*j, array, *attrib),
-			       v[faces[i][j]], attrib->getByteSize());
+		for (int j = 0; j < 6; j++) {
+			const int vertex = i*6 + j;
+			memcpy(buffer + getIndexForVert(vertex, array, position),
+			       v[faces[i][j]], position.getByteSize());
+			memcpy(buffer + getIndexForVert(vertex, array, normal),
+			       n[i], normal.getByteSize());
+			memcpy(buffer + getIndexForVert(vertex, array, tex_coord),
+			       t[j], tex_coord.getByteSize());
 		}
-
-	}
 	}
 }
 
