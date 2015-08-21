@@ -8,6 +8,8 @@
 *
 ******************************************************************/
 
+#include <cmath>
+
 #include <cybergarage/x3d/SphereNode.h>
 #include <cybergarage/x3d/Graphic3D.h>
 
@@ -133,12 +135,18 @@ void SphereNode::outputContext(std::ostream &printStream, const char *indentStri
 
 size_t SphereNode::getNumVertexArrays()
 {
-	return 0;
+	return 1;
 }
 
 void SphereNode::getVertexArray(VertexArray& array, size_t id) 
 {
-	return;
+	if (id != 0) return;
+
+	VertexFormat format;
+	format.addAttribute<float>("position", 3);
+	format.addAttribute<float>("normal", 3);
+	format.addAttribute<float>("texcoord", 2);
+	array = VertexArray(60, 0, false, format);
 }
 
 ////////////////////////////////////////////////
@@ -147,6 +155,70 @@ void SphereNode::getVertexArray(VertexArray& array, size_t id)
 
 void SphereNode::getVertexData(size_t id, void *vertex_data)
 {
+	if (id >= getNumVertexArrays()) {
+		return;
+	}
+
+	VertexArray array;
+	getVertexArray(array, id);
+ 	const VertexFormat& format = array.getFormat();
+
+// Just fun with an icosphere for now
+// http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
+// Maybe convert to uv sphere later
+
+#define PI   3.14159265358979323846
+#define PI_2 6.28318530717958647693
+
+	float r = (1.0 + sqrt(5.0))/ 2.0;
+	const float v[12][3] = {
+		{-1.0, r, 0.0}, {1.0, r, 0.0}, {-1.0, -r, 0.0}, {1.0, -r, 0.0},
+		{0.0, -1.0, r}, {0.0, 1.0, r}, {0.0, -1.0, -r}, {0.0, 1.0, -r},
+		{r, 0.0, -1.0}, {r, 0.0, 1.0}, {-r, 0.0, -1.0}, {-r, 0.0, 1.0}
+	};
+
+	static int faces[20][3] = {
+		{0, 11, 5}, {0, 5,  1}, { 0, 1,  7}, { 0, 7, 10},  {0, 10, 11},
+		{1,  5, 9}, {5, 11, 4}, {11, 10, 2}, {10, 7,  6},  {7,  1,  8},
+		{3,  9, 4}, {3, 4,  2}, { 3, 2,  6}, { 3, 6,  8},  {3,  8,  9},
+		{4,  9, 5}, {2, 4, 11}, { 6, 2, 10}, { 8, 6,  7},  {9,  8,  1},
+	};
+
+	char* buffer = (char*)vertex_data;
+
+	const Attribute& pos = *format.getAttribute(0);
+	const Attribute& norm = *format.getAttribute(1);
+	const Attribute& tex = *format.getAttribute(2);
+
+	for (int i = 0; i < 20; i++) {
+		for (int j = 0; j < 3; j++) {
+			const int vertex_id = i*3 + j;
+			const float (&vertex)[3] = v[faces[i][j]];
+			memcpy(buffer + getIndexForVert(vertex_id, array, pos),
+			       v[faces[i][j]], pos.getByteSize());
+			
+			float length = sqrt((vertex[0] * vertex[0])
+					  + (vertex[1] * vertex[1])
+                                          + (vertex[2] * vertex[2])); 
+
+			float n[3] = {
+				vertex[0] / length,
+				vertex[1] / length,
+				vertex[2] / length
+			};
+
+			memcpy(buffer + getIndexForVert(vertex_id, array, norm),
+			       n, norm.getByteSize());
+
+			float t[2] = {
+				0.5 + (atan2(n[2], n[0]) / (PI_2)),
+				0.5 - (asin(n[1]) / PI)
+			};
+
+			memcpy(buffer + getIndexForVert(vertex_id, array, tex),
+			       t, tex.getByteSize());
+		}
+	}
 }
 
 ////////////////////////////////////////////////
