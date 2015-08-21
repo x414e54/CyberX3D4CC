@@ -56,24 +56,6 @@ public:
 			return normalized;
 		}
 
-    		bool operator<(const Attribute& b) const 
-		{
-        		return strcmp(this->name, b.name) < 0 &&
-			       this->type->before(*b.type) &&
-			       this->normalized < b.normalized &&
-			       this->offset < b.offset &&
-			       this->components < b.components;
-    		}
-
-    		bool operator==(const Attribute& b) const 
-		{
-        		return strcmp(this->name, b.name) == 0 &&
-			       this->type == b.type &&
-			       this->normalized == b.normalized &&
-			       this->offset == b.offset &&
-			       this->components == b.components;
-    		}
-
 		static size_t alignAttribute(const Attribute& attrib) 
 		{
 			size_t byte_size = attrib.getByteSize();
@@ -127,39 +109,6 @@ public:
 			}
 		}
 
-    		bool operator<(const VertexFormat& b) const {
-        		
-			if (this->num_attribs >= b.num_attribs) {
-				return false;
-			}
-
-			for (size_t i = 0; i < num_attribs; ++i) {
-				const Attribute& attrib_a = this->attribs[i];
-				const Attribute& attrib_b = b.attribs[i];
-				if (!(attrib_a < attrib_b)) {
-					return false;
-				}
-			}
-
-			return true;
-    		}
-
-    		bool operator==(const VertexFormat& b) const {
-        		
-			if (this->num_attribs != b.num_attribs) {
-				return false;
-			}
-
-			for (size_t i = 0; i < num_attribs; ++i) {
-				const Attribute& attrib_a = this->attribs[i];
-				const Attribute& attrib_b = b.attribs[i];
-				if (!(attrib_a == attrib_b)) {
-					return false;
-				}
-			}
-
-			return true;
-    		}
 	private:
 		size_t num_attribs;
 		size_t size;
