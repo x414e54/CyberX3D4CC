@@ -166,8 +166,8 @@ public:
 	virtual size_t getNumVertexArrays() { return 0; }
 	virtual void getVertexArray(VertexArray&, size_t) {}
 
-	virtual void getVertexData(void *, size_t) {}
-	virtual void getElementData(void *, size_t) {}
+	virtual void getVertexData(size_t, void *) {}
+	virtual void getElementData(size_t, void *) {}
 };
 
 }
