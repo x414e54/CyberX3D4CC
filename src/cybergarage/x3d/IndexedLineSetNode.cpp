@@ -364,6 +364,28 @@ void IndexedLineSetNode::recomputeBoundingBox()
 */
 
 ////////////////////////////////////////////////
+//	IndexedLineSetNode::getVertexArray
+////////////////////////////////////////////////
+
+size_t IndexedLineSetNode::getNumVertexArrays()
+{
+	return 0;
+}
+
+void IndexedLineSetNode::getVertexArray(VertexArray& array, size_t id) 
+{
+	return;
+}
+
+////////////////////////////////////////////////
+//	IndexedLineSetNode::getVertexData
+////////////////////////////////////////////////
+
+void IndexedLineSetNode::getVertexData(size_t id, void *vertex_data)
+{
+}
+
+////////////////////////////////////////////////
 //	IndexedLineSetNode::recomputeDisplayList
 ////////////////////////////////////////////////
 

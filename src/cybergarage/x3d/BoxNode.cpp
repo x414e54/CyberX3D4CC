@@ -132,7 +132,6 @@ void BoxNode::recomputeBoundingBox()
 //	BoxNode::getVertexArray
 ////////////////////////////////////////////////
 
-
 size_t BoxNode::getNumVertexArrays()
 {
 	return 1;

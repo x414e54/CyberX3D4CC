@@ -257,6 +257,28 @@ void CylinderNode::outputContext(std::ostream &printStream, const char *indentSt
 }
 
 ////////////////////////////////////////////////
+//	CylinderNode::getVertexArray
+////////////////////////////////////////////////
+
+size_t CylinderNode::getNumVertexArrays()
+{
+	return 0;
+}
+
+void CylinderNode::getVertexArray(VertexArray& array, size_t id) 
+{
+	return;
+}
+
+////////////////////////////////////////////////
+//	CylinderNode::getVertexData
+////////////////////////////////////////////////
+
+void CylinderNode::getVertexData(size_t id, void *vertex_data)
+{
+}
+
+////////////////////////////////////////////////
 //	CylinderNode::recomputeDisplayList
 ////////////////////////////////////////////////
 
