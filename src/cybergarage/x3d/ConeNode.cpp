@@ -228,12 +228,18 @@ void ConeNode::outputContext(std::ostream &printStream, const char *indentString
 
 size_t ConeNode::getNumVertexArrays()
 {
-	return 0;
+	return 1;
 }
 
 void ConeNode::getVertexArray(VertexArray& array, size_t id) 
 {
-	return;
+	if (id != 0) return;
+
+	VertexFormat format;
+	format.addAttribute<float>("position", 3);
+	format.addAttribute<float>("normal", 3);
+	format.addAttribute<float>("texcoord", 2);
+	array = VertexArray(getSlices() * 6, 0, false, format);
 }
 
 ////////////////////////////////////////////////
@@ -242,6 +248,89 @@ void ConeNode::getVertexArray(VertexArray& array, size_t id)
 
 void ConeNode::getVertexData(size_t id, void *vertex_data)
 {
+	if (id >= getNumVertexArrays() || getSlices() == 0.0) {
+		return;
+	}
+
+	const size_t count = 6;//getBottom() ? 6 : 3;
+	const size_t start = getSide() ? 0 : 3;
+
+	if (start == count) {
+		return;
+	}
+
+	VertexArray array;
+	getVertexArray(array, id);
+ 	const VertexFormat& format = array.getFormat();
+
+#define hPI 1.57079632679489661923
+#define PI_2 6.28318530717958647693
+
+	const int slices = getSlices();
+
+	char* buffer = (char*)vertex_data;
+
+	const Attribute& pos = *format.getAttribute(0);
+	const Attribute& norm = *format.getAttribute(1);
+	const Attribute& tex = *format.getAttribute(2);
+
+	// TODO Stacks?
+
+	const float h = getHeight();
+	const float r = getBottomRadius();
+	const float ny = (hPI - atan(h/r)) / hPI;
+	const float segment_radius = PI_2 / getSlices();
+	const float segment_length = 1.0 / getSlices();
+	const float bottom_n[3] = {0.0, -1.0, 0.0};
+
+	// TODO indexed list
+	for (int i = 0; i < slices; ++i) {
+		const float length = i * segment_length;
+		const float length2 = length + segment_length;
+		const float angle = i * segment_radius;
+		const float angle2 = angle + segment_radius;
+		const float xz[2] = {r * cos(angle), r * sin(angle)};
+		const float xz2[2] = {r * cos(angle2), r * sin(angle2)}; 
+
+		const float verts[6][3] = {
+			{xz[0], 0.0, xz[1]},
+			{0.0, h, 0.0},
+			{xz2[0], 0.0, xz2[1]},
+			{0.0, 0.0, 0.0},
+			{xz[0], 0.0, xz[1]},
+			{xz2[0], 0.0, xz2[1]}
+		};
+
+		const float t[6][2] = {
+			{1.0 - length, 0.0},
+			{1.0 - length, 1.0},
+			{1.0 - length2, 0.0},
+			{0.5, 0.5},
+			{(0.5 * sin(angle)) + 0.5, (0.5 * cos(angle)) + 0.5},
+			{(0.5 * sin(angle2)) + 0.5, (0.5 * cos(angle2)) + 0.5},
+		};
+
+		for (int j = start; j < count; ++j) {
+			const size_t vertex_id = ((j > 2) ? (slices * 3) : 0) +
+						 ((3*i) + (j % 3));
+			
+			const float (&v)[3] = verts[j];
+
+			memcpy(buffer + getIndexForVert(vertex_id, array, pos),
+			       v, pos.getByteSize());
+			const float len = sqrt((v[0] * v[0])
+						+ (v[2] * v[2]));
+			const float n[3] = {
+				xz[0], ny, xz[1] 
+			};
+
+			memcpy(buffer + getIndexForVert(vertex_id, array, norm),
+			       (j > 2) ? bottom_n : n, norm.getByteSize());
+
+			memcpy(buffer + getIndexForVert(vertex_id, array, tex),
+			       t[j], tex.getByteSize());
+		}
+	}
 }
 
 ////////////////////////////////////////////////
