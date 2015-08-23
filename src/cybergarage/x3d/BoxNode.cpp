@@ -163,7 +163,7 @@ void BoxNode::getVertexData(size_t id, void *vertex_data)
  	const VertexFormat& format = array.getFormat();
 
 	static float n[6][3] = {
-			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0},
+			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, -1.0},
 			{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}};
 
 	static int faces[6][6] = {
@@ -225,7 +225,7 @@ void BoxNode::getVertexData(size_t id, void *vertex_data)
 static void DrawBox(float x0, float x1, float y0, float y1,	float z0, float z1)
 {
     static float n[6][3] = {
-			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0},
+			{0.0, 0.0, 1.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, -1.0},
 			{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}};
 
     static int faces[6][4] = {
