@@ -293,12 +293,12 @@ void ConeNode::getVertexData(size_t id, void *vertex_data)
 		const float xz2[2] = {r * cos(angle2), r * sin(angle2)}; 
 
 		const float verts[6][3] = {
-			{xz[0], 0.0, xz[1]},
-			{0.0, h, 0.0},
-			{xz2[0], 0.0, xz2[1]},
-			{0.0, 0.0, 0.0},
-			{xz[0], 0.0, xz[1]},
-			{xz2[0], 0.0, xz2[1]}
+			{xz[0], -h/2.0, xz[1]},
+			{0.0, h/2.0, 0.0},
+			{xz2[0], -h/2.0, xz2[1]},
+			{0.0, h/2.0, 0.0},
+			{xz[0], -h/2.0, xz[1]},
+			{xz2[0], -h/2.0, xz2[1]}
 		};
 
 		const float t[6][2] = {
