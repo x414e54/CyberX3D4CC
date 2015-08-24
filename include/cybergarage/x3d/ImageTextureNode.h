@@ -62,6 +62,10 @@ public:
 	////////////////////////////////////////////////
 
 	bool createImage();
+
+	bool createImageFrom(int handle, int width, int height, bool transparency);
+
+	bool createImageFrom(RGBAColor32 *image, int width, int height, bool transparency);
 	
 	int getWidth() const
 	{

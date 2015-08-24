@@ -184,6 +184,46 @@ bool ImageTextureNode::createImage()
 }
 
 ////////////////////////////////////////////////
+//	ImageTextureNode::createImageFrom
+////////////////////////////////////////////////
+
+bool ImageTextureNode::createImageFrom(int handle, int width, int height, bool transparency)
+{
+	mWidth	= width;
+	mHeight	= height;
+
+	setTextureName(handle);
+
+#ifdef CX3D_SUPPORT_OPENGL
+	setHasTransparencyColor(transparency);
+#endif
+
+	return true;
+}
+
+bool ImageTextureNode::createImageFrom(RGBAColor32 * image, int width, int height, bool transparency)
+{
+	mWidth	= width;
+	mHeight	= height;
+
+	if (mImageBuffer != NULL)
+		delete []mImageBuffer;
+
+	mImageBuffer = image;
+	
+	if (mImageBuffer == NULL) {
+		mWidth	= 0;
+		mHeight	= 0;
+	}
+
+#ifdef CX3D_SUPPORT_OPENGL
+	setHasTransparencyColor(transparency);
+#endif
+
+	return true;
+}
+
+////////////////////////////////////////////////
 //	ImageTextureNode::createImage
 ////////////////////////////////////////////////
 
