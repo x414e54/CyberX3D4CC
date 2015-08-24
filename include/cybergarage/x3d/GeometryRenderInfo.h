@@ -59,7 +59,7 @@ public:
 		static size_t alignAttribute(const Attribute& attrib) 
 		{
 			size_t byte_size = attrib.getByteSize();
-			return byte_size + (byte_size % 4);
+			return (byte_size + 3) & ~3;
 		}
  
 	private:
