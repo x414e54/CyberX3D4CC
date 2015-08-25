@@ -33,6 +33,7 @@ SceneGraph::SceneGraph()
 	setBoundingBoxSize(-1.0f, -1.0f, -1.0f);
 	setSelectedShapeNode(NULL);
 	setSelectedNode(NULL);
+	setSelectedKeyDeviceSensorNode(NULL);
 
 	mBackgroundNodeVector		= new Vector<BindableNode>;
 	mFogNodeVector				= new Vector<BindableNode>;

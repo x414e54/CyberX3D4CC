@@ -94,6 +94,8 @@ Node::~Node()
 			sg->setSelectedShapeNode(NULL);
 		if (sg->getSelectedNode() == this)
 			sg->setSelectedNode(NULL);
+		if (sg->getSelectedKeyDeviceSensorNode() == this)
+			sg->setSelectedKeyDeviceSensorNode(NULL);
 	}
 
 	remove();
