@@ -50,6 +50,7 @@ class SceneGraph : public Scene {
 
 	ShapeNode				*mSelectedShapeNode;
 	Node					*mSelectedNode;
+	KeyDeviceSensorNode			*mSelectedKeyDeviceSensorNode;
 	
 	BackgroundNode			*mDefaultBackgroundNode;
 	FogNode					*mDefaultFogNode;
@@ -658,6 +659,9 @@ public:
 
 	void			setSelectedNode(Node *node)				{ mSelectedNode = node; }
 	Node			*getSelectedNode()	const					{ return mSelectedNode; }
+
+	void			setSelectedKeyDeviceSensorNode(KeyDeviceSensorNode *node){ mSelectedKeyDeviceSensorNode = node; }
+	KeyDeviceSensorNode	*getSelectedKeyDeviceSensorNode() const		  	{ return mSelectedKeyDeviceSensorNode; }
 
 	//////////////////////////////////////////////////
 	// Default Bindable Nodes

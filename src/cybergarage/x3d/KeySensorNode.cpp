@@ -8,6 +8,7 @@
 *
 ******************************************************************/
 
+#include <cybergarage/x3d/SceneGraph.h>
 #include <cybergarage/x3d/KeySensorNode.h>
 
 using namespace CyberX3D;
@@ -55,6 +56,17 @@ void KeySensorNode::uninitialize()
 
 void KeySensorNode::update() 
 {
+        SceneGraph* sg = getSceneGraph();
+
+        if (this->isEnabled()) {
+                if (sg->getSelectedKeyDeviceSensorNode() != NULL
+                    && sg->getSelectedKeyDeviceSensorNode() != this) {
+                        sg->getSelectedKeyDeviceSensorNode()->setEnabled(false);
+                }
+                sg->setSelectedKeyDeviceSensorNode((KeyDeviceSensorNode*)this);
+        } else if (sg->getSelectedKeyDeviceSensorNode() == this) {
+                sg->setSelectedKeyDeviceSensorNode(NULL);
+        }
 }
 
 ////////////////////////////////////////////////
