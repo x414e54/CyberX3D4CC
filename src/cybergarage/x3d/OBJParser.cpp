@@ -44,7 +44,15 @@ bool OBJParser::load(const char *objFile, void (*callbackFn)(int nLine, void *in
     std::vector<shape_t> shapes;
     std::vector<material_t> materials;
 
-    LoadObj(shapes, materials, objFile);
+    std::string path = objFile;
+    std::size_t pos = path.find_last_of("/");
+    path = path.substr(0, pos) + "/";
+
+    std::string error = LoadObj(shapes, materials, objFile, path.c_str());
+
+    if (!error.empty()) {
+        return false;
+    }
 
     beginParse();
 
