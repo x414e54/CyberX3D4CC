@@ -141,12 +141,12 @@ bool OBJParser::load(const char *objFile, void (*callbackFn)(int nLine, void *in
             if (shape->mesh.normals.size() > 0) {
                 NormalNode *normals = (NormalNode*)CreateX3DNode(NORMAL_NODE);
                 normals->getVectorField()->setValue(shape->mesh.normals.size(), (float(*)[3])&shape->mesh.normals[0]);
-                data->getCoordField()->setValue(normals);
+                data->getNormalField()->setValue(normals);
             }
             if (shape->mesh.texcoords.size() > 0) {
                 TextureCoordinateNode *texcoords = (TextureCoordinateNode*)CreateX3DNode(TEXTURECOORDINATE_NODE);
                 texcoords->getPointField()->setValue(shape->mesh.texcoords.size(), (float(*)[2])&shape->mesh.texcoords[0]);
-                data->getCoordField()->setValue(texcoords);
+                data->getTexCoordField()->setValue(texcoords);
             }
             if (shape->mesh.indices.size() > 0) {
                 data->getIndexField()->setValue(shape->mesh.indices.size(), (int*)&shape->mesh.indices[0]);
