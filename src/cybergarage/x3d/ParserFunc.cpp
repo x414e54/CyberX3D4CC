@@ -262,6 +262,8 @@ Node *CyberX3D::CreateX3DNode(int nodeType)
 		// 11. Rendering component (X3D)
 		case COLORRGBA_NODE:
 			return new ColorRGBANode();
+                case INDEXEDTRIANGLESET_NODE:
+                        return new IndexedTriangleSetNode();
 		case TRIANGLESET_NODE:  
 			return new TriangleSetNode();
 		case TRIANGLEFANSET_NODE:
