@@ -773,7 +773,7 @@ public:
 	}
 
 	bool isGeometry3DNode() const {
-		if (isBoxNode() || isConeNode() || isCylinderNode() || isElevationGridNode() || isExtrusionNode() || isIndexedFaceSetNode() || isIndexedLineSetNode() || isPointSetNode() || isSphereNode() || isTextNode())
+                if (isBoxNode() || isConeNode() || isCylinderNode() || isElevationGridNode() || isExtrusionNode() || isIndexedFaceSetNode() || isIndexedLineSetNode() || isPointSetNode() || isSphereNode() || isTextNode() || isIndexedTriangleSetNode() || isIndexedTriangleFanSetNode() || isIndexedTriangleStripSetNode())
 			return true;
 		return false;
 	}
@@ -1043,6 +1043,18 @@ public:
 	bool isColorRGBANode() const {
 		return isNode(COLORRGBA_NODE);
 	}
+
+        bool isIndexedTriangleSetNode() const {
+                return isNode(INDEXEDTRIANGLESET_NODE);
+        }
+
+        bool isIndexedTriangleFanSetNode() const {
+                return isNode(INDEXEDTRIANGLEFANSET_NODE);
+        }
+
+        bool isIndexedTriangleStripSetNode() const {
+                return isNode(INDEXEDTRIANGLESTRIPSET_NODE);
+        }
 
 	bool isTriangleSetNode() const {
 		return isNode(TRIANGLESET_NODE);
