@@ -79,6 +79,9 @@ worldInfoNodeString, //"WorldInfo";
 "StaticGroup",
 // 11. Rendering component (X3D)
 "ColorRGBA",
+"IndexedTriangleSet",
+"IndexedTriangleFanSet",
+"IndexedTriangleStripSet",
 "TriangleSet",
 "TriangleFanSet",
 "TriangleStripSet",
@@ -176,8 +179,8 @@ hitPointFieldString, //"hitPoint";
 hitTexCoordFieldString, //"hitTexCoord";
 horizontalFieldString, //"horizontal";
 imageFieldString, //"image";
-indexFieldString, //"index";
 inRegionPrivateFieldString, //"inRegion";
+indexFieldString, //"index";
 infoFieldString, //"info";
 intensityFieldString, //"intensity";
 isActiveFieldString, //"isActive";
