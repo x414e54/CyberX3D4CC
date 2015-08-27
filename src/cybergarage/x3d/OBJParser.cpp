@@ -109,7 +109,7 @@ bool OBJParser::load(const char *objFile, void (*callbackFn)(int nLine, void *in
         ParserPopNode();
     }
 
-    for (std::vector<shape_t>::const_iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
+    for (std::vector<shape_t>::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
         ShapeNode *shapeNode = (ShapeNode*)CreateX3DNode(SHAPE_NODE);
         shapeNode->setName(shape->name.c_str());
         ParserAddNode(shapeNode);
@@ -127,7 +127,25 @@ bool OBJParser::load(const char *objFile, void (*callbackFn)(int nLine, void *in
             }
 
             IndexedTriangleSetNode *data = (IndexedTriangleSetNode*)CreateX3DNode(INDEXEDTRIANGLESET_NODE);
-            //data.
+            if (shape->mesh.positions.size() > 0) {
+                CoordinateNode *coordinates = (CoordinateNode*)CreateX3DNode(COORDINATE_NODE);
+                coordinates->getPointField()->setValue(shape->mesh.positions.size(), (float(*)[3])&shape->mesh.positions[0]);
+                data->getCoordField()->setValue(coordinates);
+            }
+            if (shape->mesh.normals.size() > 0) {
+                NormalNode *normals = (NormalNode*)CreateX3DNode(NORMAL_NODE);
+                normals->getVectorField()->setValue(shape->mesh.normals.size(), (float(*)[3])&shape->mesh.normals[0]);
+                data->getCoordField()->setValue(normals);
+            }
+            if (shape->mesh.texcoords.size() > 0) {
+                TextureCoordinateNode *texcoords = (TextureCoordinateNode*)CreateX3DNode(TEXTURECOORDINATE_NODE);
+                texcoords->getPointField()->setValue(shape->mesh.texcoords.size(), (float(*)[2])&shape->mesh.texcoords[0]);
+                data->getCoordField()->setValue(texcoords);
+            }
+            if (shape->mesh.indices.size() > 0) {
+                data->getIndexField()->setValue(shape->mesh.indices.size(), (int*)&shape->mesh.indices[0]);
+            }
+            ParserAddNode(data);
 
         ParserPopNode();
     }
