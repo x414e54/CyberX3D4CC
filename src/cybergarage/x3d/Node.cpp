@@ -1388,7 +1388,9 @@ Node *Node::createInstanceNode()
 		instanceNode = new LODNode();
 	else if (isMaterialNode())
 		instanceNode = new MaterialNode();
-	else if (isMovieTextureNode())
+        else if (isMultiTextureNode())
+                instanceNode = new MultiTextureNode();
+        else if (isMovieTextureNode())
 		instanceNode = new MovieTextureNode();
 	else if (isNavigationInfoNode())
 		instanceNode = new NavigationInfoNode();
