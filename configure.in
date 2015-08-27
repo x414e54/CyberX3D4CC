@@ -69,6 +69,27 @@ AC_ARG_ENABLE(debug,
 AM_CONDITIONAL(DEBUG, test x$debug = xtrue)
 
 ############################## 
+# Checks for Tiny OBJ Loader libraries.
+############################## 
+
+AC_ARG_ENABLE(obj,
+    [ --enable-obj enable OBJ [default=yes]],
+    [
+        if test "$enableval" = "yes"; then
+            check_obj="yes"
+        else
+            check_obj="no"
+        fi
+    ],[
+        check_obj="yes"
+    ]
+)
+if test "$check_obj" = "yes"; then
+AC_CHECK_HEADERS([tiny_obj_loader.h],[AC_DEFINE([CX3D_SUPPORT_OBJ],1,[OBJ])],[AC_MSG_RESULT(no)])
+AC_CHECK_LIB(tinyobjloader,main)
+fi
+
+############################## 
 # Checks for Xerces libraries.
 ############################## 
 

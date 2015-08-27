@@ -12,7 +12,7 @@
 #include <cybergarage/x3d/ParserFunc.h>
 #include <cybergarage/x3d/OBJParser.h>
 
-#if 1
+#ifdef X3D_SUPPORT_OBJ
 
 #include <tiny_obj_loader.h>
 
