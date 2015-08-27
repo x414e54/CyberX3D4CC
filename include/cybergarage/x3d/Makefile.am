@@ -116,6 +116,7 @@ libcx3d_HEADERS = \
 	NodeType.h \
 	NormalInterpolatorNode.h \
 	NormalNode.h \
+	OBJParser.h \
 	OldCpp.h \
 	OrientationInterpolatorNode.h \
 	PROTO.h \

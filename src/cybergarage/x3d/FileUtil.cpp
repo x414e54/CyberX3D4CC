@@ -25,6 +25,10 @@ int CyberX3D::GetFileFormat(const char *filename)
 {
 	unsigned char signature[5];
 
+	if (!strncmp(".obj", (char *)strrchr(filename, '.'), 4)) {
+		return FILE_FORMAT_OBJ;
+    }
+
 #if defined(CX3D_SUPPORT_GZIP)
 	gzFile fp = gzopen(filename, "rb");
 	if (!fp)	

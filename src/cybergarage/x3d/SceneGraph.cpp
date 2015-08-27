@@ -190,6 +190,11 @@ bool SceneGraph::add(const char *filename, bool bInitialize, void (*callbackFn)(
 		parser = new X3DParser();
 		break;
 #endif
+#ifdef CX3D_SUPPORT_OBJ
+	case FILE_FORMAT_OBJ:
+		parser = new OBJParser();
+		break;
+#endif
 	}
 
 	if (parser == NULL)

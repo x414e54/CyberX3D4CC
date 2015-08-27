@@ -115,6 +115,7 @@ libcx3d_1_0_la_SOURCES = \
 	NodeType.cpp \
 	NormalInterpolatorNode.cpp \
 	NormalNode.cpp \
+	OBJParser.cpp \
 	OrientationInterpolatorNode.cpp \
 	PROTO.cpp \
 	Parser.cpp \
