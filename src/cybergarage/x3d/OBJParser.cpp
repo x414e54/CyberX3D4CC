@@ -95,15 +95,13 @@ bool OBJParser::load(const char *objFile, void (*callbackFn)(int nLine, void *in
                 ParserAddNode(texture);
 
                 std::string param;
-                if (!(param = material->unknown_parameter.find("disp")->second).empty()) {
+                if (!(param = material->unknown_parameter["disp"]).empty()) {
                     texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
-                    texture->addUrl(param.c_str());
-                    ParserAddNode(texture);
-                } else if (!(param = material->unknown_parameter.find("disp")->second).empty()) {
-                    texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
+                    //texture->setContainerField("displacementTexture");
                     texture->addUrl(param.c_str());
                     ParserAddNode(texture);
                 }
+
             ParserPopNode();
 
         ParserPopNode();
