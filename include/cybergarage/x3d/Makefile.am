@@ -69,6 +69,7 @@ libcx3d_HEADERS = \
 	ImageTextureNode.h \
 	IndexedFaceSetNode.h \
 	IndexedLineSetNode.h \
+	IndexedTriangleSetNode.h \
 	InfoNode.h \
 	InlineNode.h \
 	IntegerSequencerNode.h \

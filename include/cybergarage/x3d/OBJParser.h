@@ -18,17 +18,6 @@
 namespace CyberX3D {
 
 class OBJParser : public Parser {
-
-public:
-
-	char *encodingName;
-	bool expandNamespaces;
-	bool doNamespaces;
-	bool doValidation;
-	bool doSchema;
-	bool schemaFullChecking;
-	bool namespacePrefixes;
-
 public:
 
 	OBJParser();

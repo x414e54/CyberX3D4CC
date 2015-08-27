@@ -24,6 +24,7 @@
 
 // 11. Rendering component (X3D)
 #include "ColorRGBANode.h"
+#include "IndexedTriangleSetNode.h"
 #include "TriangleSetNode.h"
 #include "TriangleFanSetNode.h"
 #include "TriangleStripSetNode.h"

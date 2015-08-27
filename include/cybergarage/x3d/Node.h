@@ -94,6 +94,7 @@ class LoadSensorNode;
 class StaticGroupNode;
 // 11. Rendering component (X3D)
 class ColorRGBANode;
+class IndexedTriangleSetNode;
 class TriangleSetNode;
 class TriangleFanSetNode;
 class TriangleStripSetNode;

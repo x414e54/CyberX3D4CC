@@ -72,6 +72,7 @@ libcx3d_1_0_la_SOURCES = \
 	ImageTextureNode.cpp \
 	IndexedFaceSetNode.cpp \
 	IndexedLineSetNode.cpp \
+	IndexedTriangleSetNode.cpp \
 	InlineNode.cpp \
 	IntegerSequencerNode.cpp \
 	IntegerTriggerNode.cpp \

@@ -176,6 +176,7 @@ hitPointFieldString, //"hitPoint";
 hitTexCoordFieldString, //"hitTexCoord";
 horizontalFieldString, //"horizontal";
 imageFieldString, //"image";
+indexFieldString, //"index";
 inRegionPrivateFieldString, //"inRegion";
 infoFieldString, //"info";
 intensityFieldString, //"intensity";

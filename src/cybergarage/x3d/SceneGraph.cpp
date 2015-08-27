@@ -17,6 +17,7 @@
 #include <cybergarage/x3d/SceneGraph.h>
 #include <cybergarage/x3d/VRML97Parser.h>
 #include <cybergarage/x3d/X3DParser.h>
+#include <cybergarage/x3d/OBJParser.h>
 #include <cybergarage/x3d/ParserFunc.h>
 
 using namespace CyberX3D;
