@@ -25,10 +25,6 @@ int CyberX3D::GetFileFormat(const char *filename)
 {
 	unsigned char signature[5];
 
-	if (!strncmp(".obj", (char *)strrchr(filename, '.'), 4)) {
-		return FILE_FORMAT_OBJ;
-    }
-
 #if defined(CX3D_SUPPORT_GZIP)
 	gzFile fp = gzopen(filename, "rb");
 	if (!fp)	
@@ -65,6 +61,10 @@ int CyberX3D::GetFileFormat(const char *filename)
 
 	if (!strncmp("PNG", (char *)(signature+1), 3))
 		fileType = FILE_FORMAT_PNG;
+
+	if (!strncmp(".obj", (char *)strrchr(filename, '.'), 4)) {
+		return FILE_FORMAT_OBJ;
+	}
 
 	return fileType;
 }
