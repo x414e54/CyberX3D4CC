@@ -147,7 +147,10 @@ bool ImageTextureNode::createImage()
 	case FILE_FORMAT_PNG:
 		mFileImage = new FilePNG(filename);
 		break;
-#endif
+#endif	
+    case FILE_FORMAT_TARGA:
+		mFileImage = new FileTarga(filename);
+		break;
 	}
 
 #if defined(CX3D_SUPPORT_URL)

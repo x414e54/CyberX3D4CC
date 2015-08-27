@@ -62,8 +62,14 @@ int CyberX3D::GetFileFormat(const char *filename)
 	if (!strncmp("PNG", (char *)(signature+1), 3))
 		fileType = FILE_FORMAT_PNG;
 
-	if (!strncmp(".obj", (char *)strrchr(filename, '.'), 4)) {
-		return FILE_FORMAT_OBJ;
+	if (!strncmp(".tga", (char *)strrchr(filename, '.'), 4) ||
+        !strncmp(".TGA", (char *)strrchr(filename, '.'), 4)) {
+		fileType = FILE_FORMAT_TARGA;
+    }
+
+	if (!strncmp(".obj", (char *)strrchr(filename, '.'), 4) || 
+        !strncmp(".OBJ", (char *)strrchr(filename, '.'), 4)) {
+		fileType = FILE_FORMAT_OBJ;
 	}
 
 	return fileType;
