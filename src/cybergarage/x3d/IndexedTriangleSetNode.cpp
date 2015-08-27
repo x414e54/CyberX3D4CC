@@ -146,14 +146,7 @@ void IndexedTriangleSetNode::initialize()
 
 int IndexedTriangleSetNode::getNPolygons() const
 {
-	CoordinateNode *coordNode = getCoordinateNodes();
-	if (!coordNode)
-		return 0;
-
-	int nCoordIndexes = coordNode->getNPoints();
-	int nCoordIndex = nCoordIndexes / 3;
-
-	return nCoordIndex;
+	return getNIndexes() / 3;
 }
 
 ////////////////////////////////////////////////
