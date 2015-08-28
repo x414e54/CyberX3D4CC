@@ -1382,7 +1382,9 @@ Node *Node::createInstanceNode()
 		instanceNode = new IndexedFaceSetNode();
 	else if (isIndexedLineSetNode()) 
 		instanceNode = new IndexedLineSetNode();
-	else if (isInlineNode()) 
+ 	else if (isIndexedTriangleSetNode())
+ 		instanceNode = new IndexedTriangleSetNode();
+        else if (isInlineNode())
 		instanceNode = new InlineNode();
 	else if (isLODNode())
 		instanceNode = new LODNode();
