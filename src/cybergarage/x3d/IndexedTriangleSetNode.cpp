@@ -166,7 +166,7 @@ void IndexedTriangleSetNode::getVertexArray(VertexArray& array, size_t id)
 	format.addAttribute<float>("position", 3);
 	format.addAttribute<float>("normal", 3);
 	format.addAttribute<float>("texcoord", 2);
-    const CoordinateNode *v_node = (CoordinateNode*)getCoordField()->getValue();
+	const CoordinateNode *v_node = (CoordinateNode*)getCoordField()->getValue();
 	array = VertexArray(v_node->getNPoints(), getNIndexes(), false, format);
 }
 
@@ -190,25 +190,25 @@ void IndexedTriangleSetNode::getVertexData(size_t id, void *vertex_data)
 	const Attribute& att_n = *format.getAttribute(1);
 	const Attribute& att_t = *format.getAttribute(2);
 
-    const CoordinateNode *v_node = (CoordinateNode*)getCoordField()->getValue();
-    const NormalNode *n_node = (NormalNode*)getNormalField()->getValue();
-    const TextureCoordinateNode *t_node = (TextureCoordinateNode*)getTexCoordField()->getValue();
+	const CoordinateNode *v_node = (CoordinateNode*)getCoordField()->getValue();
+	const NormalNode *n_node = (NormalNode*)getNormalField()->getValue();
+	const TextureCoordinateNode *t_node = (TextureCoordinateNode*)getTexCoordField()->getValue();
 
-    float v[3];
-    float n[3];
-    float t[3];
+	float v[3];
+	float n[3];
+	float t[3];
 
 	for (int i = 0; i < v_node->getNPoints(); ++i) {
-        v_node->getPoint(i, v);
-        n_node->getVector(i, n);
-        t_node->getPoint(i, t);
+		v_node->getPoint(i, v);
+		n_node->getVector(i, n);
+		t_node->getPoint(i, t);
 
 		memcpy(buffer + getIndexForVert(i, array, att_v),
-		       v, att_v.getByteSize());
+			   v, att_v.getByteSize());
 		memcpy(buffer + getIndexForVert(i, array, att_n),
-		       n, att_n.getByteSize());
+			   n, att_n.getByteSize());
 		memcpy(buffer + getIndexForVert(i, array, att_t),
-		       t, att_t.getByteSize());
+			   t, att_t.getByteSize());
 	}
 }
 
@@ -222,11 +222,22 @@ void IndexedTriangleSetNode::getElementData(size_t id, void *index_data)
 		return;
 	}
 
-    int index = 0;
+	const CoordinateNode *v_node = (CoordinateNode*)getCoordField()->getValue();
+	const int max_points = v_node->getNPoints();
+
+	int index = 0;
+
+	int *buffer = (int*)index_data;
 	for (int i = 0; i < getNIndexes(); ++i) {
-        index = getIndex(i);
-        memcpy(index_data, &index, sizeof(int));
-    }
+		index = getIndex(i);
+		if (index < 0 || index >= max_points) {
+			// Invalid index, just set to 0.
+			index = 0;		
+		}
+
+		memcpy(buffer, &index, sizeof(int));
+		++buffer;
+	}
 }
 
 ////////////////////////////////////////////////
