@@ -139,10 +139,19 @@ class	GroupingNode;
 class	Geometry3DNode;
 
 class	DEFNode;
-
+class NodeListener;
 class Node : public LinkedListNode<Node> {
-
 public:
+
+class NodeListener
+{
+public:
+	NodeListener() {}
+	virtual ~NodeListener() {}
+	virtual void onUpdated(Node* node) = 0;
+	virtual void onDeleted(Node* node) = 0;
+};
+
 	String				*mName;
 	int						mType;
 	Vector<Field>		*mExposedField;
@@ -162,6 +171,7 @@ public:
 	Vector<Field>		*mOrgPrivateField;
 
 private:
+	NodeListener		*mNodeListener;
 	Node				*mParentNode;
 	LinkedList<Node>	*mChildNodes;
 	SceneGraph			*mSceneGraph;
@@ -192,6 +202,9 @@ public:
 	void setType(const int type);
 	int getType() const;
 	const char *getTypeString() const;
+
+	void setNodeListener(NodeListener * listener);
+	NodeListener *getNodeListener() const;
 
 	////////////////////////////////////////////////
 	//	Java

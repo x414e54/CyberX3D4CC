@@ -53,6 +53,7 @@ void Node::initializeMember()
 	setInitialized(false);
 	setName(NULL);
 	setReferenceNode(NULL);
+	setNodeListener(NULL);
 }
 
 Node::Node() 
@@ -87,6 +88,11 @@ void Node::deleteChildNodes(void)
 Node::~Node() 
 {
   deleteChildNodes(); //Remove this string for optimise process of release memory
+
+	if (mNodeListener != NULL)
+	{
+		mNodeListener->onDeleted(this);
+	}
 
 	SceneGraph *sg = getSceneGraph();
 	if (sg) {
@@ -171,6 +177,20 @@ int Node::getType() const
 const char *Node::getTypeString() const
 {
 	return GetNodeTypeString(mType);
+}
+
+////////////////////////////////////////////////
+//	NodeListener
+////////////////////////////////////////////////
+
+void Node::setNodeListener(NodeListener *listener)
+{
+	mNodeListener = listener;
+}
+
+Node::NodeListener *Node::getNodeListener() const
+{
+	return mNodeListener;
 }
 
 ////////////////////////////////////////////////
