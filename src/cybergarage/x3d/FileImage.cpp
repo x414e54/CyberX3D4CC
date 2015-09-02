@@ -30,6 +30,30 @@ bool FileImage::isOk() const
 		return false;
 }
 
+RGBAColor32 *FileImage::getImage32(int newx, int newy) const
+{
+	float xscale = (float)getWidth() / (float)newx;
+	float yscale = (float)getHeight() / (float)newy;
+
+	RGBAColor32 *color = getImage32();
+	if (color == NULL)
+		return NULL;
+
+	RGBAColor32 *newColor = new RGBAColor32[newx*newy];
+
+	int width = getWidth();
+
+	for (int y=0; y<newy; y++) {
+		for (int x=0; x<newx; x++) {
+			int xIndex = (int)((float)x*xscale);
+			int yIndex = (int)((float)y*yscale);
+			memcpy(newColor[x + y*newx], color[xIndex + yIndex*width], sizeof(RGBAColor32));
+		}
+	}
+
+	return newColor;
+}
+
 RGBColor24 *FileImage::getImage(int newx, int newy) const
 {
 	float xscale = (float)getWidth() / (float)newx;
@@ -59,6 +83,10 @@ RGBAColor32 *FileImage::getRGBAImage() const
 	int width	= getWidth();
 	int height	= getHeight();
 
+    if (hasAlphaChannel()) {
+	    return getImage32(width, height);
+    }
+
 	RGBColor24 *color = getImage(width, height);
 	if (color == NULL)
 		return NULL;
@@ -85,6 +113,10 @@ RGBAColor32 *FileImage::getRGBAImage() const
 
 RGBAColor32 *FileImage::getRGBAImage(int newx, int newy) const
 {
+    if (hasAlphaChannel()) {
+	    return getImage32(newx, newy);
+    }
+
 	RGBColor24	*color = getImage(newx, newy);
 	if (color == NULL)
 		return NULL;

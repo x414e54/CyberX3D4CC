@@ -14,6 +14,7 @@
 
 #ifdef CX3D_SUPPORT_OBJ
 
+#include <algorithm>
 #include <tiny_obj_loader.h>
 
 using namespace CyberX3D;
@@ -33,6 +34,16 @@ OBJParser::OBJParser()
 
 OBJParser::~OBJParser()
 {
+}
+
+////////////////////////////////////////////////
+//  convert_path
+////////////////////////////////////////////////
+
+static std::string convert_path(std::string path, std::string base)
+{
+    std::replace(path.begin(), path.end(), '\\', '/');
+    return base + "/" + path;
 }
 
 ////////////////////////////////////////////////
@@ -64,51 +75,55 @@ bool OBJParser::load(const char *objFile, void (*callbackFn)(int nLine, void *in
 
         ParserPushNode(appearanceNode);
 
-            // TODO add support for "CommonSurfaceShader" and do this correctly.
-            MaterialNode *materialNode = (MaterialNode*)CreateX3DNode(MATERIAL_NODE);
-            materialNode->setAmbientIntensity(material->ambient[0]);
-            materialNode->setDiffuseColor(material->diffuse);
-            materialNode->setSpecularColor(material->specular);
-            //materialNode->setTransmittance(material.transmittance);
-            materialNode->setEmissiveColor(material->emission);
-            materialNode->setShininess(material->shininess);
-            //materialNode->setIor(material.ior);
-            //materialNode->setTransparency(material.dissolve);
-            //materialNode->setIllum(material.illum);
-            ParserAddNode(materialNode);
-            
-            MultiTextureNode *textures = (MultiTextureNode*)CreateX3DNode(MULTITEXTURE_NODE);
-            ParserAddNode(textures);
-            
-            ParserPushNode(textures);
-            
+            CommonSurfaceShaderNode *shaderNode = (CommonSurfaceShaderNode*)CreateX3DNode(COMMONSURFACESHADER_NODE);
+            shaderNode->setAmbientFactor(material->ambient);
+            shaderNode->setDiffuseFactor(material->diffuse);
+            shaderNode->setSpecularFactor(material->specular);
+            shaderNode->setTransmissionFactor(material->transmittance);
+            shaderNode->setEmissiveFactor(material->emission);
+            shaderNode->setShininessFactor(material->shininess);
+            shaderNode->setRelativeIndexOfRefraction(material->ior);
+            shaderNode->setAlphaFactor(material->dissolve);
+            // TODO illumination modes
+            //material.illum
+            ParserAddNode(shaderNode);
+
+            ParserPushNode(shaderNode);
+
                 ImageTextureNode *texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
-                texture->addUrl(material->ambient_texname.c_str());
-                //texture->setContainerField("ambientTexture");
+                texture->addUrl(convert_path(material->ambient_texname, path).c_str());
+                shaderNode->getAmbientTextureField()->setValue(texture);
                 ParserAddNode(texture);
 
                 texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
-                texture->addUrl(material->diffuse_texname.c_str());
-                //texture->setContainerField("diffuseTexture");
+                texture->addUrl(convert_path(material->diffuse_texname, path).c_str());
+                shaderNode->getDiffuseTextureField()->setValue(texture);
                 ParserAddNode(texture);
 
                 texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
-                texture->addUrl(material->specular_texname.c_str());
-                //texture->setContainerField("specularTexture");
+                texture->addUrl(convert_path(material->specular_texname, path).c_str());
+                shaderNode->getSpecularTextureField()->setValue(texture);
                 ParserAddNode(texture);
 
                 texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
-                texture->addUrl(material->normal_texname.c_str());
-                //texture->setContainerField("normalTexture");
+                texture->addUrl(convert_path(material->specular_highlight_texname, path).c_str());
+                shaderNode->getShininessTextureField()->setValue(texture);
                 ParserAddNode(texture);
 
-                std::string param;
-                if (!(param = material->unknown_parameter["disp"]).empty()) {
-                    texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
-                    //texture->setContainerField("displacementTexture");
-                    texture->addUrl(param.c_str());
-                    ParserAddNode(texture);
-                }
+                texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
+                texture->addUrl(convert_path(material->bump_texname, path).c_str());
+                shaderNode->getNormalTextureField()->setValue(texture);
+                ParserAddNode(texture);
+
+                texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
+                texture->addUrl(convert_path(material->alpha_texname, path).c_str());
+                shaderNode->getAlphaTextureField()->setValue(texture);
+                ParserAddNode(texture);
+
+                texture = (ImageTextureNode*)CreateX3DNode(IMAGETEXTURE_NODE);
+                texture->addUrl(convert_path(material->displacement_texname, path).c_str());
+                shaderNode->getDisplacementTextureField()->setValue(texture);
+                ParserAddNode(texture);
 
             ParserPopNode();
 
@@ -133,25 +148,33 @@ bool OBJParser::load(const char *objFile, void (*callbackFn)(int nLine, void *in
             }
 
             IndexedTriangleSetNode *data = (IndexedTriangleSetNode*)CreateX3DNode(INDEXEDTRIANGLESET_NODE);
-            if (shape->mesh.positions.size() > 0) {
-                CoordinateNode *coordinates = (CoordinateNode*)CreateX3DNode(COORDINATE_NODE);
-                coordinates->getPointField()->setValue(shape->mesh.positions.size(), (float(*)[3])&shape->mesh.positions[0]);
-                data->getCoordField()->setValue(coordinates);
-            }
-            if (shape->mesh.normals.size() > 0) {
-                NormalNode *normals = (NormalNode*)CreateX3DNode(NORMAL_NODE);
-                normals->getVectorField()->setValue(shape->mesh.normals.size(), (float(*)[3])&shape->mesh.normals[0]);
-                data->getNormalField()->setValue(normals);
-            }
-            if (shape->mesh.texcoords.size() > 0) {
-                TextureCoordinateNode *texcoords = (TextureCoordinateNode*)CreateX3DNode(TEXTURECOORDINATE_NODE);
-                texcoords->getPointField()->setValue(shape->mesh.texcoords.size(), (float(*)[2])&shape->mesh.texcoords[0]);
-                data->getTexCoordField()->setValue(texcoords);
-            }
-            if (shape->mesh.indices.size() > 0) {
-                data->getIndexField()->setValue(shape->mesh.indices.size(), (int*)&shape->mesh.indices[0]);
-            }
             ParserAddNode(data);
+
+            ParserPushNode(data);
+
+                if (shape->mesh.positions.size() > 0) {
+                    CoordinateNode *coordinates = (CoordinateNode*)CreateX3DNode(COORDINATE_NODE);
+                    coordinates->getPointField()->setValue(shape->mesh.positions.size(), (float(*)[3])&shape->mesh.positions[0]);
+                    data->getCoordField()->setValue(coordinates);
+                    ParserAddNode(coordinates);
+                }
+                if (shape->mesh.normals.size() > 0) {
+                    NormalNode *normals = (NormalNode*)CreateX3DNode(NORMAL_NODE);
+                    normals->getVectorField()->setValue(shape->mesh.normals.size(), (float(*)[3])&shape->mesh.normals[0]);
+                    data->getNormalField()->setValue(normals);
+                    ParserAddNode(normals);
+                }
+                if (shape->mesh.texcoords.size() > 0) {
+                    TextureCoordinateNode *texcoords = (TextureCoordinateNode*)CreateX3DNode(TEXTURECOORDINATE_NODE);
+                    texcoords->getPointField()->setValue(shape->mesh.texcoords.size(), (float(*)[2])&shape->mesh.texcoords[0]);
+                    data->getTexCoordField()->setValue(texcoords);
+                    ParserAddNode(texcoords);
+                }
+                if (shape->mesh.indices.size() > 0) {
+                    data->getIndexField()->setValue(shape->mesh.indices.size(), (int*)&shape->mesh.indices[0]);
+                }
+
+            ParserPopNode();
 
         ParserPopNode();
     }

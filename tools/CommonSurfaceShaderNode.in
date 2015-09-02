@@ -1,0 +1,75 @@
+	SFFloat *alphaFactor;
+	SFNode *alphaTexture;
+	SFString *alphaTextureChannelMask;
+	SFInt32 *alphaTextureCoordinatesId;
+	SFInt32 *alphaTextureId;
+
+	SFVec3f *ambientFactor;
+	SFNode *ambientTexture;
+	SFString *ambientTextureChannelMask;
+	SFInt32 *ambientTextureCoordinatesId;
+	SFInt32 *ambientTextureId;
+
+	SFInt32 *binormalTextureCoordinatesId;
+
+	SFVec3f *diffuseFactor;
+	SFNode *diffuseTexture;
+	SFString *diffuseTextureChannelMask;
+	SFInt32 *diffuseTextureCoordinatesId;
+	SFInt32 *diffuseTextureId;
+
+	SFString *displacementAxis;
+	SFFloat *displacementFactor;
+	SFNode *displacementTexture;
+	SFInt32 *displacementTextureCoordinatesId;
+	SFInt32 *displacementTextureId;
+
+	SFVec3f *emissiveFactor;
+	SFNode *emissiveTexture;
+	SFString *emissiveTextureChannelMask;
+	SFInt32 *emissiveTextureCoordinatesId;
+	SFInt32 *emissiveTextureId;
+
+	SFVec3f *environmentFactor;
+	SFNode *environmentTexture;
+	SFString *environmentTextureChannelMask;
+	SFInt32 *environmentTextureCoordinatesId;
+	SFInt32 *environmentTextureId;
+
+	SFFloat *fresnelBlend;
+	SFBool *invertAlphaTexture;
+
+	SFVec3f *normalBias;
+	SFString *normalFormat;
+	SFVec3f *normalScale;
+	SFString *normalSpace;
+	SFNode *normalTexture;
+	SFString *normalTextureChannelMask;
+	SFInt32 *normalTextureCoordinatesId;
+	SFInt32 *normalTextureId;
+
+	SFVec3f *reflectionFactor;
+	SFString *reflectionTextureChannelMask;
+	SFInt32 *reflectionTextureCoordinatesId;
+	SFInt32 *reflectionTextureId;
+	SFFloat *relativeIndexOfRefraction;
+
+	SFFloat *shininessFactor;
+	SFNode *shininessTexture;
+	SFString *shininessTextureChannelMask;
+	SFInt32 *shininessTextureCoordinatesId;
+	SFInt32 *shininessTextureId;
+
+	SFVec3f *specularFactor;
+	SFNode *specularTexture;
+	SFString *specularTextureChannelMask;
+	SFInt32 *specularTextureCoordinatesId;
+	SFInt32 *specularTextureId;
+
+	SFInt32 *tangentTextureCoordinatesId;
+
+	SFVec3f *transmissionFactor;
+	SFNode *transmissionTexture;
+	SFString *transmissionTextureChannelMask;
+	SFInt32 *transmissionTextureCoordinatesId;
+	SFInt32 *transmissionTextureId;

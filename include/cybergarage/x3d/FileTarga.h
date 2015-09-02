@@ -44,6 +44,7 @@ class FileTarga : public FileImage {
 	unsigned char		pixelSize;
 	unsigned char		attBits;
 	RGBColor24			*imageBuffer;
+	RGBAColor32			*imageBuffer32;
 public:
 	FileTarga(const char *filename);
 	FileTarga(int cx, int cy, RGBColor24 *color);
@@ -58,6 +59,9 @@ public:
 	int			getWidth() const { return width; }
 	int			getHeight() const { return height; }
 	RGBColor24	*getImage()	const { return imageBuffer; }
+	RGBAColor32	*getImage32()	const { return imageBuffer32; }
+
+    bool hasAlphaChannel() const { return pixelSize == 32; }
 };
 
 }

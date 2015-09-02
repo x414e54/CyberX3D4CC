@@ -29,6 +29,7 @@ libcx3d_HEADERS = \
 	ColorInterpolatorNode.h \
 	ColorNode.h \
 	ColorRGBANode.h \
+	CommonSurfaceShaderNode.h \
 	ComposedGeometryNode.h \
 	ConeNode.h \
 	CoordinateInterpolator2DNode.h \

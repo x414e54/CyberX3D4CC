@@ -28,6 +28,7 @@ void FileTarga::initialize()
 	pixelSize	= 0;
 	attBits		= 0;
 	imageBuffer = NULL;
+	imageBuffer32 = NULL;
 }
 
 FileTarga::FileTarga(const char *filename)
@@ -73,7 +74,7 @@ bool FileTarga::load(const char *filename)
 	fread(&pixelSize, sizeof(char), sizeof(char), fp);
 	fread(&attBits, sizeof(char), sizeof(char), fp);
 
-	if (pixelSize != 24)
+	if (!(pixelSize == 24 || pixelSize == 32))
 		return false;
 	
 	if (0 < idLength) {
@@ -81,12 +82,20 @@ bool FileTarga::load(const char *filename)
 		idLength = 0;
 	}
 	
-	imageBuffer = (RGBColor24 *)malloc(sizeof(RGBColor24)*(height*width));
-	for (int y=0; y<height; y++) {
-		for (int x=0; x<width; x++)
-			fread(&imageBuffer[x+y*width], sizeof(char), sizeof(RGBColor24), fp);
-	}
-	
+    if (pixelSize == 24) {
+	    imageBuffer = (RGBColor24 *)malloc(sizeof(RGBColor24)*(height*width));
+	    for (int y=0; y<height; y++) {
+	    	for (int x=0; x<width; x++)
+	    		fread(&imageBuffer[x+y*width], sizeof(char), sizeof(RGBColor24), fp);
+	    }
+	} else if (pixelSize == 32) {
+	    imageBuffer32 = (RGBAColor32 *)malloc(sizeof(RGBAColor32)*(height*width));
+    	for (int y=0; y<height; y++) {
+	    	for (int x=0; x<width; x++)
+	    		fread(&imageBuffer32[x+y*width], sizeof(char), sizeof(RGBAColor32), fp);
+	    }
+    }    
+
 	fclose(fp);
 
 	return true;

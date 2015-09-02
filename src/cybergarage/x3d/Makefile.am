@@ -37,6 +37,7 @@ libcx3d_1_0_la_SOURCES = \
 	ColorInterpolatorNode.cpp \
 	ColorNode.cpp \
 	ColorRGBANode.cpp \
+	CommonSurfaceShaderNode.cpp \
 	ComposedGeometryNode.cpp \
 	ConeNode.cpp \
 	CoordinateInterpolator2DNode.cpp \

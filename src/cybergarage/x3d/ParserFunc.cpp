@@ -338,6 +338,9 @@ Node *CyberX3D::CreateX3DNode(int nodeType)
 		// Route (X3D)
 		case ROUTE_NODE:
 			return new RouteNode();
+        // Extensions (X3D)
+		case COMMONSURFACESHADER_NODE:
+			return new CommonSurfaceShaderNode();
 	}
 
 	return new XMLNode();

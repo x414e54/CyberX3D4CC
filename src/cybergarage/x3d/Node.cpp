@@ -1468,6 +1468,8 @@ Node *Node::createInstanceNode()
 		instanceNode = new VisibilitySensorNode();
 	else if (isWorldInfoNode())
 		instanceNode = new WorldInfoNode();
+	else if (isCommonSurfaceShaderNode())
+		instanceNode = new CommonSurfaceShaderNode();
 
 	assert(instanceNode);
 

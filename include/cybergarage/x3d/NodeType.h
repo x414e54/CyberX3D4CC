@@ -128,6 +128,8 @@ NODESEQUENCER_NODE,
 SCENE_NODE, 
 // ROUTE(X3D)
 ROUTE_NODE, 
+// Extensions (X3D)
+COMMONSURFACESHADER_NODE,  
 };
 
 /******************************************************************

@@ -42,6 +42,11 @@ public:
 	virtual int			getWidth() const = 0;
 	virtual int			getHeight() const = 0;
 	virtual RGBColor24	*getImage() const = 0;
+	virtual RGBAColor32	*getImage32() const { return 0; }
+
+	virtual bool hasAlphaChannel() const {
+		return false;
+	}
 
 	virtual bool hasTransparencyColor() const {
 		return false;
@@ -51,6 +56,7 @@ public:
 	};
 
 	RGBColor24	*getImage(int newx, int newy) const;
+	RGBAColor32	*getImage32(int newx, int newy) const;
 	RGBAColor32	*getRGBAImage() const;
 	RGBAColor32	*getRGBAImage(int newx, int newy) const;
 };

@@ -29,6 +29,7 @@ static const char textureExposedFieldName[] = "texture";
 static const char textureTransformExposedFieldName[] = "textureTransform";
 static const char linePropertiesExposedFieldName[] = "lineProperties";
 static const char fillPropertiesExposedFieldName[] = "fillProperties";
+static const char shaderExposedFieldName[] = "shader";
 
 AppearanceNode::AppearanceNode() 
 {
@@ -57,6 +58,9 @@ AppearanceNode::AppearanceNode()
 
 	fillPropertiesField = new SFNode();
 	addExposedField(fillPropertiesExposedFieldName, fillPropertiesField);
+
+	shaderField = new SFNode();
+	addExposedField(shaderExposedFieldName, shaderField);
 }
 
 AppearanceNode::~AppearanceNode() 
@@ -100,6 +104,13 @@ SFNode *AppearanceNode::getFillPropertiesField() const
 	if (isInstanceNode() == false)
 		return fillPropertiesField;
 	return (SFNode *)getExposedField(fillPropertiesExposedFieldName);
+}
+
+SFNode *AppearanceNode::getShaderField() const
+{
+	if (isInstanceNode() == false)
+		return shaderField;
+	return (SFNode *)getExposedField(shaderExposedFieldName);
 }
 
 ////////////////////////////////////////////////

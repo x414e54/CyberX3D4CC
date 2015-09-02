@@ -25,6 +25,7 @@ class AppearanceNode : public Node {
 	SFNode *texTransformField;
 	SFNode *linePropertiesField;
 	SFNode *fillPropertiesField;
+	SFNode *shaderField;
 
 public:
 
@@ -40,6 +41,7 @@ public:
 	SFNode *getTextureTransformField() const;
 	SFNode *getLinePropertiesField() const;
 	SFNode *getFillPropertiesField() const;
+	SFNode *getShaderField() const;
 
 	////////////////////////////////////////////////
 	//	List

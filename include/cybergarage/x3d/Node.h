@@ -134,6 +134,8 @@ class NodeSequencerNode;
 class Shape2DNode;
 class BooleanTimeTriggerNode;
 class Transform2DNode;
+// Extensions (X3D)
+class CommonSurfaceShaderNode;
 
 class	GroupingNode;
 class	Geometry3DNode;
@@ -748,6 +750,12 @@ public:
 		return (Transform2DNode *)getChildNodeByType(TRANSFORM2D_NODE);
 	}
 
+    // Extensions (X3D)
+
+	CommonSurfaceShaderNode *getCommonSurfaceShaderNodes() const {
+		return (CommonSurfaceShaderNode *)getChildNodeByType(COMMONSURFACESHADER_NODE);
+	}
+
 	////////////////////////////////////////////////
 	//	is*
 	////////////////////////////////////////////////
@@ -1209,6 +1217,12 @@ public:
 
 	bool isTransform2DNode() const {
 		return isNode(TRANSFORM2D_NODE);
+	}
+
+    // Extensions (X3D)
+
+	bool isCommonSurfaceShaderNode() const {
+		return isNode(COMMONSURFACESHADER_NODE);
 	}
 
 	////////////////////////////////////////////////

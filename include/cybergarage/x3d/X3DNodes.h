@@ -75,4 +75,7 @@
 // RouteNode (X3D)
 #include "RouteNode.h"
 
+// Extensions (X3D)
+#include "CommonSurfaceShaderNode.h"
+
 #endif

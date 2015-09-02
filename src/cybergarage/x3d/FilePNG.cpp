@@ -67,7 +67,8 @@ bool FilePNG::load(const char *filename)
 
 	png_get_IHDR(pngRead, pngInfo, &width, &height, &bitDepth, &colorType, &interlaceType, NULL, NULL);
 
-	if (!(colorType & PNG_COLOR_MASK_COLOR) || bitDepth != 8) {
+	if ((!(colorType & PNG_COLOR_MASK_COLOR) &&
+         !(colorType == PNG_COLOR_TYPE_GRAY)) || bitDepth != 8) {
 		fclose(fp);
 		return false;
 	}
@@ -89,6 +90,8 @@ bool FilePNG::load(const char *filename)
 	int	pixelByte = 0;
 	if (colorType & PNG_COLOR_TYPE_RGB_ALPHA)
 		pixelByte = bitDepth * 4;
+    else if (colorType == PNG_COLOR_TYPE_GRAY)
+        pixelByte = bitDepth;
 	else 
 		pixelByte = bitDepth * 3;
 
@@ -109,12 +112,14 @@ bool FilePNG::load(const char *filename)
 			unsigned char *color = mImgBuffer[(width * j) + i];
 			if (colorType & PNG_COLOR_TYPE_RGB_ALPHA)
 				offset = i * 4 * (bitDepth/8);
+            else if (colorType == PNG_COLOR_TYPE_GRAY)
+				offset = i * (bitDepth/8);
 			else
 				offset = i * 3 * (bitDepth/8);
 
-			color[0] = imgData[j][offset + 0];
-			color[1] = imgData[j][offset + 1];
-			color[2] = imgData[j][offset + 2];
+			color[0] = imgData[j][offset + (0 % (bitDepth/8))];
+			color[1] = imgData[j][offset + (1 % (bitDepth/8))];
+			color[2] = imgData[j][offset + (2 % (bitDepth/8))];
 
 			if ((colorType & PNG_COLOR_TYPE_RGB_ALPHA) && imgData[j][offset + 3] == 0) {
 				color[0] = gDefaultTransparencyColor[0];

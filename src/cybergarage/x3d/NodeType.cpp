@@ -125,6 +125,8 @@ worldInfoNodeString, //"WorldInfo";
 "Scene",
 // ROUTE (X3D)
 "ROUTE",
+// Extensions (X3D)
+"CommonSurfaceShader",
 };
 
 static const char *fieldTypeString[] = {

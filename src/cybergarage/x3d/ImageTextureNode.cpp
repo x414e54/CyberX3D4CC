@@ -46,6 +46,8 @@ ImageTextureNode::ImageTextureNode()
 
 	mImageBuffer	= NULL;
 	mFileImage		= NULL;
+	mWidth  	    = 0;
+	mHeight	        = 0;
 }
 
 ////////////////////////////////////////////////
@@ -232,6 +234,7 @@ bool ImageTextureNode::createImageFrom(RGBAColor32 * image, int width, int heigh
 
 void ImageTextureNode::initialize() 
 {
+    if (isInstanceNode()) return;
 	if (0 < getNUrls()) 
 		updateTexture();
 	else
@@ -286,8 +289,11 @@ void ImageTextureNode::updateTexture()
 			setCurrentTextureName(NULL);
 	}
 	else {
-		setTextureName(0);
-		setCurrentTextureName(NULL);
+		setTextureName(0);		
+        if (0 < getNUrls()) 
+			setCurrentTextureName(getUrl(0));
+		else
+			setCurrentTextureName(NULL);
 	}
 #endif
 }
@@ -298,6 +304,7 @@ void ImageTextureNode::updateTexture()
 
 void ImageTextureNode::update() 
 {
+    if (isInstanceNode()) return;
 	if (0 < getNUrls()) {
 		const char *urlFilename = getUrl(0);
 		const char *currTexFilename = getCurrentTextureName();
